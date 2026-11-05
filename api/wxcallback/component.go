@@ -106,7 +106,7 @@ func ticketHandler(body *[]byte) error {
 	if err := binding.JSON.BindBody(*body, &record); err != nil {
 		return err
 	}
-	log.Info("[new ticket]" + record.ComponentVerifyTicket)
+	log.Infof("[new ticket] length=%d", len(record.ComponentVerifyTicket))
 	if err := wxbase.SetTicket(record.ComponentVerifyTicket); err != nil {
 		return err
 	}

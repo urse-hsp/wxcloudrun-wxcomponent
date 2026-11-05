@@ -27,3 +27,6 @@ client/yarn.lock
 client/package-lock.json
 client/.vscode
 client/dist
+
+
+.env

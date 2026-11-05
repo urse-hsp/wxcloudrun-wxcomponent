@@ -34,7 +34,7 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 	cacheCli := db.GetCache()
 	cacheKey := genTokenKey(appid, tokenType)
 	if value, found := cacheCli.Get(cacheKey); found {
-		log.Info("hit cache, token: ", value)
+		log.Infof("hit access token cache: appid=%s type=%d", appid, tokenType)
 		return value.(string), nil
 	}
 
