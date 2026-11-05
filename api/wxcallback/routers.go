@@ -8,6 +8,8 @@ import (
 // Routers 路由
 func Routers(e *gin.Engine) {
 	g := e.Group("/wxcallback", middleware.WXSourceMiddleWare)
+	g.GET("/component", componentHandler)
 	g.POST("/component", componentHandler)
 	g.POST("/biz/:appid", bizHandler)
+	g.GET("/biz/:appid", bizHandler)
 }
