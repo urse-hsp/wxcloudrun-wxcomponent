@@ -83,8 +83,13 @@ WX_APPID="wx################"   #微信APPID
 go run main
 ```
 
-#### 判断微信来源
-服务部署在微信云托管时，微信推送消息走内网，无需加解密，判断header中是否有x-wx-source即可。
+#### 微信推送回调配置
+授权事件回调支持微信 AES 加密 XML。部署时需配置以下环境变量，值与微信开放平台「授权事件接收 URL」的 Token 和消息加解密密钥一致：
+
+- `WX_CALLBACK_TOKEN`
+- `WX_ENCODING_AES_KEY`（微信后台生成的 43 位 EncodingAESKey）
+
+回调会校验 `msg_signature`，解密后将事件保存到 `wxcallback_component`，再执行 ticket/授权事件处理。组件 AppID 使用已有的 `WX_APPID` 环境变量。旧版 JSON 回调仍可继续使用。
 
 #### 数据表
 ```

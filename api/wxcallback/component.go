@@ -1,6 +1,7 @@
 package wxcallback
 
 import (
+	"encoding/xml"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -22,11 +23,23 @@ type wxCallbackComponentRecord struct {
 }
 
 func componentHandler(c *gin.Context) {
+	if c.Request.Method == http.MethodGet {
+		handleComponentVerification(c)
+		return
+	}
+
 	// 记录到数据库
 	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, err := decodeComponentCallback(c, body)
+	if err != nil {
+		log.Errorf("decode component callback: %v", err)
+		c.String(http.StatusBadRequest, "invalid callback")
+		return
+	}
 	var json wxCallbackComponentRecord
 	if err := binding.JSON.BindBody(body, &json); err != nil {
-		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
+		log.Errorf("parse component callback: %v", err)
+		c.JSON(http.StatusBadRequest, errno.ErrInvalidParam.WithData(err.Error()))
 		return
 	}
 	r := model.WxCallbackComponentRecord{
@@ -44,7 +57,6 @@ func componentHandler(c *gin.Context) {
 	}
 
 	// 处理授权相关的消息
-	var err error
 	switch json.InfoType {
 	case "component_verify_ticket":
 		err = ticketHandler(&body)
@@ -72,6 +84,17 @@ func componentHandler(c *gin.Context) {
 	if !proxyOpen {
 		c.String(http.StatusOK, "success")
 	}
+}
+
+// componentXMLMessage is the decrypted message sent inside WeChat's AES envelope.
+type componentXMLMessage struct {
+	XMLName                      xml.Name `xml:"xml" json:"-"`
+	CreateTime                   int64    `xml:"CreateTime" json:"CreateTime"`
+	InfoType                     string   `xml:"InfoType" json:"InfoType"`
+	ComponentVerifyTicket        string   `xml:"ComponentVerifyTicket" json:"ComponentVerifyTicket"`
+	AuthorizerAppid              string   `xml:"AuthorizerAppid" json:"AuthorizerAppid"`
+	AuthorizationCode            string   `xml:"AuthorizationCode" json:"AuthorizationCode"`
+	AuthorizationCodeExpiredTime int64    `xml:"AuthorizationCodeExpiredTime" json:"AuthorizationCodeExpiredTime"`
 }
 
 type ticketRecord struct {

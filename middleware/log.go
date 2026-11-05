@@ -22,6 +22,11 @@ func LogMiddleWare(c *gin.Context) {
 
 	log.Debugf("%s", "---header---")
 	for k, v := range c.Request.Header {
+		switch strings.ToLower(k) {
+		case "authorization", "cookie", "set-cookie", "x-cloudbase-context":
+			log.Debugf("%s %s", k, "[REDACTED]")
+			continue
+		}
 		log.Debugf("%s %s", k, v)
 	}
 	log.Debugf("%s", "---header---")
