@@ -38,18 +38,31 @@ func GetComponentWxApiUrl(path string, query string) (string, error) {
 	url := fmt.Sprintf("%s://api.weixin.qq.com%s", protocol, path)
 
 	if config.WxApiConf.UseCloudBaseAccessToken {
+		token := cloudbasetoken.GetCloudBaseAccessToken()
+		if len(token) == 0 {
+			log.Errorf("build component api url failed: path=%s cloudbase_access_token is empty, "+
+				"UseCloudBaseAccessToken=true but token not loaded (only works inside WeChat CloudBase with open-api service enabled)", path)
+		}
+		log.Infof("build component api url: path=%s token_mode=cloudbase token_length=%d", path, len(token))
 		return fmt.Sprintf("%s?cloudbase_access_token=%s%s",
-			url, cloudbasetoken.GetCloudBaseAccessToken(), query), nil
+			url, token, query), nil
 	}
 	if config.WxApiConf.UseComponentAccessToken {
 		token, err := GetComponentAccessToken()
 		if err != nil {
-			log.Error(err)
+			log.Errorf("build component api url failed: path=%s token_mode=component get component_access_token err=%v", path, err)
 			return "", err
 		}
+		if len(token) == 0 {
+			log.Errorf("build component api url failed: path=%s token_mode=component component_access_token is empty", path)
+		}
+		log.Infof("build component api url: path=%s token_mode=component token_length=%d", path, len(token))
 		return fmt.Sprintf("%s?component_access_token=%s%s",
 			url, token, query), nil
 	}
+	log.Errorf("build component api url failed: path=%s NO access token mode enabled "+
+		"(both UseCloudBaseAccessToken and UseComponentAccessToken are false in comm/config/server.conf), "+
+		"request will be sent WITHOUT token and WeChat will return 41001 access_token missing", path)
 	return fmt.Sprintf("%s?%s", url, query), nil
 }
 
