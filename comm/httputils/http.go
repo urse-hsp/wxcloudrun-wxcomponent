@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
-	"strings"
+	"net/url"
 	"time"
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/config"
@@ -23,7 +23,7 @@ func PostJson(url string, data interface{}) ([]byte, error) {
 // PostFormData 发起post请求，格式为Form-Data
 func PostFormData(url string, formFile multipart.File, fileName string, fieldName string) ([]byte, error) {
 	client := &http.Client{Timeout: 20 * time.Second}
-	log.Debugf("[post]http url: %s", url)
+	log.Debugf("[post]http url: %s", safeURL(url))
 
 	buf := new(bytes.Buffer)
 	w := multipart.NewWriter(buf)
@@ -50,7 +50,7 @@ func PostFormData(url string, formFile multipart.File, fileName string, fieldNam
 	}
 
 	result, _ := ioutil.ReadAll(resp.Body)
-	log.Debugf("[post]http resp: %s", result)
+	log.Debugf("[post]http response bytes: %d", len(result))
 	return result, nil
 }
 
@@ -63,8 +63,7 @@ func Post(url string, data []byte, contentType string) ([]byte, error) {
 // RawPost 发起post请求
 func RawPost(url string, data []byte, contentType string) (*http.Response, []byte, error) {
 	client := &http.Client{Timeout: 5 * time.Second}
-	log.Debugf("[post]http url: %s content-type: %s", url, contentType)
-	log.Debugf("[post]http req: %s", data)
+	log.Debugf("[post]http url: %s content-type: %s request bytes: %d", safeURL(url), contentType, len(data))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 	if err != nil {
 		log.Error(err)
@@ -82,12 +81,7 @@ func RawPost(url string, data []byte, contentType string) (*http.Response, []byt
 	}
 
 	result, _ := ioutil.ReadAll(resp.Body)
-	if len(resp.Header["Content-Type"]) > 0 &&
-		strings.Contains(strings.ToLower(resp.Header["Content-Type"][0]), "application/json") {
-		log.Debugf("[get]http resp: %s", result)
-	} else {
-		log.Debugf("[get]http resp Content-Type: %v", resp.Header["Content-Type"])
-	}
+	log.Debugf("[post]http response bytes: %d", len(result))
 	return resp, result, nil
 }
 
@@ -100,7 +94,7 @@ func Get(url string) ([]byte, error) {
 // RawGet 发起get请求
 func RawGet(url string) (*http.Response, []byte, error) {
 	client := &http.Client{Timeout: 5 * time.Second}
-	log.Debugf("[get]http url: %s", url)
+	log.Debugf("[get]http url: %s", safeURL(url))
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Error(err)
@@ -116,11 +110,17 @@ func RawGet(url string) (*http.Response, []byte, error) {
 		return resp, nil, fmt.Errorf("http code: %d", resp.StatusCode)
 	}
 	result, _ := ioutil.ReadAll(resp.Body)
-	if len(resp.Header["Content-Type"]) > 0 &&
-		strings.Contains(strings.ToLower(resp.Header["Content-Type"][0]), "application/json") {
-		log.Debugf("[get]http resp: %s", result)
-	} else {
-		log.Debugf("[get]http resp Content-Type: %v", resp.Header["Content-Type"])
-	}
+	log.Debugf("[get]http response bytes: %d", len(result))
 	return resp, result, nil
+}
+
+// safeURL omits query parameters because they often carry access tokens.
+func safeURL(rawURL string) string {
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return "[invalid URL]"
+	}
+	parsed.RawQuery = ""
+	parsed.Fragment = ""
+	return parsed.String()
 }
