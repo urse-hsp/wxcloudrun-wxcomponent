@@ -190,7 +190,10 @@ func getLatestAuditStatus(appid string, resp *getLatestAuditStatusResp) (bool, e
 }
 
 func getVisitStatus(appid string) (int, error) {
-	_, body, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/getvisitstatus", "", gin.H{})
+	// These endpoints take an empty JSON object. Use a struct rather than an
+	// empty map: jsoniter's sorted-map encoder can panic while iterating an
+	// empty map with newer Go runtimes.
+	_, body, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/getvisitstatus", "", struct{}{})
 	if err != nil {
 		log.Error(err)
 		return 0, err
@@ -204,7 +207,7 @@ func getVisitStatus(appid string) (int, error) {
 }
 
 func getVersionInfo(appid string, resp *getVersionInfoResp) error {
-	_, body, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/getversioninfo", "", gin.H{})
+	_, body, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/getversioninfo", "", struct{}{})
 	if err != nil {
 		log.Error(err)
 		return err
@@ -463,7 +466,7 @@ func commitCodeHandler(c *gin.Context) {
 
 func releaseCodeHandler(c *gin.Context) {
 	appid := c.DefaultQuery("appid", "")
-	if _, _, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/release", "", gin.H{}); err != nil {
+	if _, _, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/release", "", struct{}{}); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
 		return
