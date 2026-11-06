@@ -79,6 +79,8 @@ func GetAuthorizerInfo(appid string, resp *AuthorizerInfoResp) error {
 		AuthorizerAppid: appid,
 	}
 	_, body, err := PostWxJsonWithComponentToken("/cgi-bin/component/api_get_authorizer_info", "", req)
+
+	fmt.Println("GetAuthorizerInfo body:", string(body))
 	if err != nil {
 		log.Error(err)
 		return err

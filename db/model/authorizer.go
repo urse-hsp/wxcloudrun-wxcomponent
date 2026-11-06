@@ -14,7 +14,7 @@ type Authorizer struct {
 	QrcodeUrl     string    `gorm:"column:qrcodeurl" json:"qrcodeUrl"`
 	PrincipalName string    `gorm:"column:principalname" json:"principalName"`
 	RefreshToken  string    `gorm:"column:refreshtoken" json:"refreshToken"`
-	FuncInfo      string    `gorm:"column:funcinfo" json:"funcInfo"`
+	FuncInfo      string    `gorm:"column:funcinfo;type:text" json:"funcInfo"`
 	VerifyInfo    int       `gorm:"column:verifyinfo" json:"verifyInfo"`
 	AuthTime      time.Time `gorm:"column:authtime" json:"authTime"`
 }

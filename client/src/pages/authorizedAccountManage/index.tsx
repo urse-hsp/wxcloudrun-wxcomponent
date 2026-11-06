@@ -1,4 +1,4 @@
-import {Table, Input, PopConfirm, Dialog, Tabs, MessagePlugin} from 'tdesign-react';
+import {Table, Input, PopConfirm, Dialog, Tabs, MessagePlugin, Button} from 'tdesign-react';
 import { SearchIcon } from 'tdesign-icons-react'
 import {useEffect, useState} from "react";
 import {request} from "../../utils/axios";
@@ -6,7 +6,8 @@ import {
     changeServiceStatusRequest,
     getAuthAccessTokenRequest,
     getAuthorizedAccountRequest,
-    getDevMiniProgramListRequest, getQrcodeRequest
+    getDevMiniProgramListRequest, getQrcodeRequest,
+    pullAuthorizerListRequest
 } from "../../utils/apis";
 import {PrimaryTableCol} from "tdesign-react/es/table/type";
 import moment from "moment";
@@ -210,6 +211,7 @@ export default function AuthorizedAccountManage() {
     const [selectedTab, setSelectedTab] = useState<string | number>(tabs[0].value)
     const [visibleQrcode, setVisibleQrcode] = useState(false)
     const [qrcode, setQrcode] = useState('')
+    const [isSyncing, setIsSyncing] = useState<boolean>(false)
 
     useEffect(() => {
         if (selectedTab === tabs[0].value) {
@@ -282,6 +284,18 @@ export default function AuthorizedAccountManage() {
 
     }
 
+    // 同步微信侧全量授权帐号数据，后端异步拉取，接口返回仅代表任务已开始
+    const syncAuthorizerData = async () => {
+        setIsSyncing(true)
+        const resp = await request({
+            request: pullAuthorizerListRequest
+        })
+        if (resp.code === 0) {
+            MessagePlugin.success('同步任务已开始，后台正在从微信拉取数据，请稍后刷新列表查看', 5000)
+        }
+        setIsSyncing(false)
+    }
+
     const openServiceStatus = async (appId: string) => {
         const resp = await request({
             request: {
@@ -310,6 +324,14 @@ export default function AuthorizedAccountManage() {
                 <div className="blue_circle" />
                 <p className="desc">代开发小程序指的是小程序管理员将权限集id为18的"小程序开发与数据分析"权限授权给该第三方，服务商可代小程序提交代码、发布上线等</p>
             </div>
+            {/* <div style={{ margin: '10px 0' }}>
+                <PopConfirm
+                    content={'将从微信拉取本第三方平台下的全量授权帐号，并清理本次未出现的旧记录（已取消授权的帐号），请谨慎操作'}
+                    onConfirm={syncAuthorizerData}
+                >
+                    <Button theme="primary" loading={isSyncing}>同步数据</Button>
+                </PopConfirm>
+            </div> */}
             <Tabs value={selectedTab} placement={'top'} size="medium" theme="normal"
                   onChange={val => setSelectedTab(val)}>
                 <TabPanel value={tabs[0].value} label={tabs[0].label}>

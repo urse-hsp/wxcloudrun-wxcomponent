@@ -29,6 +29,10 @@ export const getAuthorizedAccountRequest: IRequestMsg = {
     url: `${HOST}/admin/authorizer-list`,
     method: "get"
 }
+export const pullAuthorizerListRequest: IRequestMsg = {
+    url: `${HOST}/admin/pull-authorizer-list`, // 同步微信侧全量授权帐号数据
+    method: "post"
+}
 export const getNormalMessageRequest: IRequestMsg = {
     url: `${HOST}/admin/wx-biz-records`,
     method: "get"
