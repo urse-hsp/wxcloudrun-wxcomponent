@@ -64,4 +64,8 @@ func Routers(e *gin.RouterGroup) {
 	// 转发设置
 	g.GET("/proxy", getProxyHandler)
 	g.POST("/proxy", updateProxyHandler)
+
+	// 设置小程序用户隐私保护指引
+	g.GET("/user-privacy", getUserPrivacyHandler)
+	g.POST("/user-privacy", updateUserPrivacyHandler)
 }

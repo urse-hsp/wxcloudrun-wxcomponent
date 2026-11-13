@@ -16,6 +16,7 @@ import ProxyConfig from "../pages/proxyConfig";
 import RedirectPage from "../pages/redirectPage";
 import MiniProgramVersion from "../pages/authorizedAccountManage/miniProgramVersion";
 import SubmitAudit from "../pages/authorizedAccountManage/submitAudit";
+import MiniProgramSettings from "../pages/authorizedAccountManage/settings";
 
 export const routes: IRoute = {
     home: {
@@ -99,6 +100,12 @@ export const routes: IRoute = {
         path: '/authorizedAccountManage/miniProgramVersion',
         showPath: '/authorizedAccountManage',
         element: <MiniProgramVersion />
+    },
+    miniProgramSettings: {
+        label: '小程序设置',
+        path: '/authorizedAccountManage/settings',
+        showPath: '/authorizedAccountManage',
+        element: <MiniProgramSettings />
     },
     submitAudit: {
         label: '提交审核',

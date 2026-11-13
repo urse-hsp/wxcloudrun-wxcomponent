@@ -11,7 +11,7 @@ export const menuList: IMenuList = [{
     icon: <Icon.AppIcon />,
     item: [routes.authPageManage, {
         ...routes.authorizedAccountManage,
-        hideItem: [routes.submitAudit, routes.miniProgramVersion],
+        hideItem: [routes.submitAudit, routes.miniProgramVersion, routes.miniProgramSettings],
     }]
 }, {
     label: '开发辅助',

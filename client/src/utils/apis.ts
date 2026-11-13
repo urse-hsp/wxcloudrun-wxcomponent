@@ -58,6 +58,15 @@ export const updateComponentInfoRequest: IRequestMsg = {
     method: "post"
 }
 
+export const getUserPrivacyRequest: IRequestMsg = {
+    url: `${HOST}/admin/user-privacy`,
+    method: "get"
+}
+export const updateUserPrivacyRequest: IRequestMsg = {
+    url: `${HOST}/admin/user-privacy`,
+    method: "post"
+}
+
 export const getPreAuthCodeRequest: IRequestMsg = {
     url: `${HOST}/authpage/preauthcode`,
     method: "get"

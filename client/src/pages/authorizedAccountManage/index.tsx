@@ -171,14 +171,14 @@ export default function AuthorizedAccountManage() {
         {
             align: 'center',
             fixed: 'right',
-            width: 210,
-            minWidth: 210,
+            width: 290,
+            minWidth: 290,
             className: 'row',
             colKey: 'id',
             title: '操作',
             render({ row }) {
                 return (
-                    <div style={{ width: '210px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <div style={{ width: '290px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                         {
                             (row.releaseInfo && row.funcInfo.includes(17))
                             &&
@@ -189,6 +189,7 @@ export default function AuthorizedAccountManage() {
                             &&
                             <a className="a" style={{ marginRight: '5px' }} onClick={() => openServiceStatus(row.appid)}>恢复服务</a>
                         }
+                        <a className="a" style={{ marginRight: '8px' }} href={`#${routes.miniProgramSettings.path}?appId=${row.appid}`}>设置</a>
                         <a className="a" href={`#${routes.miniProgramVersion.path}?appId=${row.appid}`}>版本管理</a>
                     </div>
                 );

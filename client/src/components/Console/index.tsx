@@ -87,14 +87,14 @@ export default function Console() {
                 <div className={styles.detail_header}>
                     {headerLabel}
                     <div className={styles.detail_header_notice}>
-                        <Dropdown maxColumnWidth={200} options={noticeOptions}
+                        {/* <Dropdown maxColumnWidth={200} options={noticeOptions}
                                   onClick={() => setShowNotice(true)}>
                             <div className={styles.detail_header_notice_item}>
                                 <Icon.NotificationIcon />
                                 <p>通知</p>
                                 <Icon.ChevronDownIcon />
                             </div>
-                        </Dropdown>
+                        </Dropdown> */}
                         <div className={styles.detail_header_notice_line} />
                         <Dropdown maxColumnWidth={200} options={options}
                                   onClick={(data) => window.open(data.value as string)}>
