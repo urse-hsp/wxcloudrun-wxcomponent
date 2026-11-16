@@ -182,14 +182,14 @@ export default function AuthorizedAccountManage() {
                         {
                             (row.releaseInfo && row.funcInfo.includes(17))
                             &&
-                            <a className="a" style={{ marginRight: '5px' }} onClick={() => getMiniProgramCode(row.appid)}>获取小程序码</a>
+                            <a className="a" style={{ marginRight: '10px' }} onClick={() => getMiniProgramCode(row.appid)}>获取小程序码</a>
                         }
                         {
                             row.serviceStatus === 0
                             &&
-                            <a className="a" style={{ marginRight: '5px' }} onClick={() => openServiceStatus(row.appid)}>恢复服务</a>
+                            <a className="a" style={{ marginRight: '10px' }} onClick={() => openServiceStatus(row.appid)}>恢复服务</a>
                         }
-                        <a className="a" style={{ marginRight: '8px' }} href={`#${routes.miniProgramSettings.path}?appId=${row.appid}`}>设置</a>
+                        <a className="a" style={{ marginRight: '10px' }} href={`#${routes.miniProgramSettings.path}?appId=${row.appid}`}>设置</a>
                         <a className="a" href={`#${routes.miniProgramVersion.path}?appId=${row.appid}`}>版本管理</a>
                     </div>
                 );
