@@ -47,7 +47,7 @@ export default function ServerDomainSettings({ appId }: { appId: string }) {
     const [loading, setLoading] = useState(false);
 
     const load = useCallback(
-        async (showMessagePlugin?: boolean = true) => {
+        async (showMessagePlugin: boolean = true) => {
             setLoading(true);
             try {
                 const resp: any = await request({
