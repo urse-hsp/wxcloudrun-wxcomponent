@@ -1,6 +1,7 @@
 import { Alert, Tabs } from "tdesign-react";
 import { useSearchParams } from "react-router-dom";
 import PrivacySettings from "./modules/privacy";
+import ServerDomainSettings from "./modules/serverDomain";
 
 const { TabPanel } = Tabs;
 
@@ -23,6 +24,9 @@ export default function MiniProgramSettings() {
             <Tabs value="privacy" placement="top" size="medium" theme="normal">
                 <TabPanel value="privacy" label="用户隐私保护指引">
                     <PrivacySettings appId={appId} />
+                </TabPanel>
+                <TabPanel value="domain" label="服务器域名">
+                    <ServerDomainSettings appId={appId} />
                 </TabPanel>
             </Tabs>
         </div>

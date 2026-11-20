@@ -464,13 +464,32 @@ func commitCodeHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, errno.OK)
 }
 
+//	func releaseCodeHandler(c *gin.Context) {
+//		appid := c.DefaultQuery("appid", "")
+//		if _, _, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/release", "", struct{}{}); err != nil {
+//			log.Error(err.Error())
+//			c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
+//			return
+//		}
+//		c.JSON(http.StatusOK, errno.OK)
+//	}
 func releaseCodeHandler(c *gin.Context) {
 	appid := c.DefaultQuery("appid", "")
-	if _, _, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/release", "", struct{}{}); err != nil {
+	_, _, err := wx.PostWxJsonWithAuthToken(appid, "/wxa/release", "", struct{}{})
+
+	if err != nil {
+		wxErrCode := wx.ParseWxErrCode(err)
+
+		if wxErrCode == 85052 {
+			c.JSON(http.StatusOK, errno.ErrSystemError.WithData("小程序当前版本已发布，无需重复操作"))
+			return
+		}
+
 		log.Error(err.Error())
 		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
 		return
 	}
+
 	c.JSON(http.StatusOK, errno.OK)
 }
 

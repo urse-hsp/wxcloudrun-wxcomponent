@@ -36,3 +36,20 @@ export const userPrivacyConfig = {
         },
     ],
 };
+
+export const serverDomainConfig = {
+    requestdomain: [
+        "https://api-pre.dongya58.com",
+        "https://api-pre.wanli58.com",
+        "https://api.dongya58.com",
+        "https://api.wanli58.com",
+    ],
+    uploaddomain: ["https://up-z0.qiniup.com", "https://up-z1.qiniup.com"],
+    downloaddomain: [
+        "https://pic.dongya58.com",
+        "https://pic.wanli58.com",
+        "https://resource.wanli58.com",
+        "https://wanlires.dongya58.com",
+        "https://wanlires.wanli58.com",
+    ],
+};

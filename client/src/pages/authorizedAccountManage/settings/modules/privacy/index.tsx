@@ -60,7 +60,10 @@ const normalizeDefaultSettingList = (
         .map((item) => ({
             privacy_key: item.privacy_key as string,
             privacy_text:
-                item.privacy_text || item.privacy_desc || item.privacy_label || "",
+                item.privacy_text ||
+                item.privacy_desc ||
+                item.privacy_label ||
+                "",
             privacy_label: item.privacy_label,
         }));
 
@@ -372,7 +375,7 @@ export default function PrivacySettings({ appId }: Props) {
                     );
                 })}
             </div>
-            <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 20, display: "flex", gap: 12 }}>
                 <Button
                     theme="primary"
                     loading={saving}
@@ -383,18 +386,12 @@ export default function PrivacySettings({ appId }: Props) {
                 </Button>
                 <Button
                     variant="outline"
-                    style={{ marginLeft: 12 }}
                     loading={loading}
                     onClick={() => loadPrivacySetting()}
                 >
                     重新获取
                 </Button>
-                <Button
-                    variant="outline"
-                    style={{ marginLeft: 12 }}
-                    loading={loading}
-                    onClick={getConfig}
-                >
+                <Button variant="outline" loading={loading} onClick={getConfig}>
                     一键默认配置
                 </Button>
             </div>

@@ -59,11 +59,19 @@ export const updateComponentInfoRequest: IRequestMsg = {
 }
 
 export const getUserPrivacyRequest: IRequestMsg = {
-    url: `${HOST}/admin/user-privacy`,
+    url: `${HOST}/admin/wxa/privacy`,
     method: "get"
 }
 export const updateUserPrivacyRequest: IRequestMsg = {
-    url: `${HOST}/admin/user-privacy`,
+    url: `${HOST}/admin/wxa/privacy`,
+    method: "post"
+}
+export const getEffectiveDomainRequest: IRequestMsg = {
+    url: `${HOST}/admin/wxa/get_effective_domain`,
+    method: "get"
+}
+export const updateModifyDomainDirectlyRequest: IRequestMsg = {
+    url: `${HOST}/admin/wxa/modify_domain_directly`,
     method: "post"
 }
 

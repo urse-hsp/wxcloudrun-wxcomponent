@@ -49,3 +49,27 @@ func SetPrivacySetting(appid string, req PrivacySettingRequest) error {
 	_, _, err := PostWxJsonWithAuthToken(appid, "/cgi-bin/component/setprivacysetting", "", req)
 	return err
 }
+
+// GetEffectiveDomain 获取发布后生效服务器域名
+func GetEffectiveDomain(appid string, privacyVer int) (json.RawMessage, error) {
+	_, body, err := PostWxJsonWithAuthToken(appid, "/wxa/get_effective_domain", "", struct{}{})
+	if err != nil {
+		return nil, err
+	}
+	return json.RawMessage(body), nil
+}
+
+type ModifyDomainDirectlyItem struct {
+	Action          string   `json:"action" wx:"action" binding:"required"` // add/delete/set/get
+	RequestDomain   []string `json:"requestdomain" wx:"requestdomain"`      // request 合法域名；action 为 get 时不需要
+	WsRequestDomain []string `json:"wsrequestdomain" wx:"wsrequestdomain"`  // socket 合法域名；action 为 get 时不需要
+	UploadDomain    []string `json:"uploaddomain" wx:"uploaddomain"`        // uploadFile 合法域名；action 为 get 时不需要
+	DownloadDomain  []string `json:"downloaddomain" wx:"downloaddomain"`    // downloadFile 合法域名；action 为 get 时不需要
+	UdpDomain       []string `json:"udpdomain" wx:"udpdomain"`              // udp 合法域名；action 为 get 时不需要
+	TcpDomain       []string `json:"tcpdomain" wx:"tcpdomain"`              // tcp 合法域名；action 为 get 时不需要
+}
+
+func UpdateModifyDomainDirectly(appid string, req ModifyDomainDirectlyItem) error {
+	_, _, err := PostWxJsonWithAuthToken(appid, "/wxa/modify_domain_directly", "", req)
+	return err
+}

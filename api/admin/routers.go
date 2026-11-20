@@ -65,7 +65,13 @@ func Routers(e *gin.RouterGroup) {
 	g.GET("/proxy", getProxyHandler)
 	g.POST("/proxy", updateProxyHandler)
 
+	/* 第三方小程序配置模块*/
+	wxa := g.Group("/wxa")
 	// 设置小程序用户隐私保护指引
-	g.GET("/user-privacy", getUserPrivacyHandler)
-	g.POST("/user-privacy", updateUserPrivacyHandler)
+	wxa.GET("/privacy", getUserPrivacyHandler)
+	wxa.POST("/privacy", updateUserPrivacyHandler)
+
+	wxa.GET("/get_effective_domain", getEffectiveDomain)
+	wxa.POST("/modify_domain_directly", updateModifyDomainDirectly)
+
 }

@@ -325,14 +325,14 @@ export default function AuthorizedAccountManage() {
                 <div className="blue_circle" />
                 <p className="desc">代开发小程序指的是小程序管理员将权限集id为18的"小程序开发与数据分析"权限授权给该第三方，服务商可代小程序提交代码、发布上线等</p>
             </div>
-            {/* <div style={{ margin: '10px 0' }}>
+            <div style={{ margin: '10px 0' }}>
                 <PopConfirm
                     content={'将从微信拉取本第三方平台下的全量授权帐号，并清理本次未出现的旧记录（已取消授权的帐号），请谨慎操作'}
                     onConfirm={syncAuthorizerData}
                 >
                     <Button theme="primary" loading={isSyncing}>同步数据</Button>
                 </PopConfirm>
-            </div> */}
+            </div>
             <Tabs value={selectedTab} placement={'top'} size="medium" theme="normal"
                   onChange={val => setSelectedTab(val)}>
                 <TabPanel value={tabs[0].value} label={tabs[0].label}>

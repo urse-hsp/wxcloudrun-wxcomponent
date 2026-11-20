@@ -3,6 +3,8 @@ package wx
 import (
 	"fmt"
 	"mime/multipart"
+	"regexp"
+	"strconv"
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/config"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/httputils"
@@ -93,7 +95,10 @@ func postWxJson(url string, data interface{}) (*WxCommError, []byte, error) {
 	var wxError WxCommError
 	var body []byte
 	var err error
-	jsonByte, _ := WxJson.Marshal(data)
+	jsonByte, err := WxJson.Marshal(data)
+	if err != nil {
+		return &wxError, nil, fmt.Errorf("marshal WeChat request body: %w", err)
+	}
 	if body, err = httputils.Post(url, jsonByte, "application/json"); err != nil {
 		return &wxError, body, err
 	}
@@ -197,4 +202,28 @@ func PostWxFormDataWithAuthToken(appid string, path string, query string,
 		return nil, []byte{}, err
 	}
 	return postWxFormData(url, formFile, fileName, fieldName)
+}
+
+// parseWxErrCode 从 wx SDK 返回的 error 中提取微信原始错误码
+func ParseWxErrCode(err error) int {
+	if err == nil {
+		return 0
+	}
+
+	// 方式1：如果 SDK 定义了自定义错误类型，优先使用类型断言
+	// if wxErr, ok := err.(*wx.WxError); ok {
+	//     return wxErr.ErrCode
+	// }
+
+	// 方式2：针对当前 "WxErrCode != 0, resp: {85052 ..." 格式做正则/字符串提取
+	errStr := err.Error()
+	// 简单示例：提取第一个出现的纯数字作为错误码
+	re := regexp.MustCompile(`\{(\d+)\s`)
+	matches := re.FindStringSubmatch(errStr)
+	if len(matches) > 1 {
+		code, _ := strconv.Atoi(matches[1])
+		return code
+	}
+
+	return -1 // 无法解析时返回默认值
 }
